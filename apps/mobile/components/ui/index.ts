@@ -1,0 +1,19 @@
+// Shared UI primitives — reuse these first (CLAUDE §3). Add variants, don't fork.
+export { Text } from './Text';
+export { Button } from './Button';
+export { IconButton } from './IconButton';
+export { Card } from './Card';
+export { Screen } from './Screen';
+export { Badge } from './Badge';
+export { Input } from './Input';
+export { Divider } from './Divider';
+export { Avatar } from './Avatar';
+export { ProgressBar } from './ProgressBar';
+export { Toggle } from './Toggle';
+export { Chip } from './Chip';
+export { SegmentedControl } from './SegmentedControl';
+export { Skeleton } from './Skeleton';
+export { ListRow } from './ListRow';
+export { EmptyState } from './EmptyState';
+export { SectionHeader } from './SectionHeader';
+export { Stat } from './Stat';

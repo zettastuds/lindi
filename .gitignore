@@ -1,0 +1,28 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# build / cache
+dist/
+.turbo/
+.expo/
+web-build/
+*.tsbuildinfo
+
+# rust / soroban (when blockchain lands)
+target/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# os / editor
+.DS_Store
+*.log
+.idea/
+
+# expo
+expo-env.d.ts
+
+screenshots/

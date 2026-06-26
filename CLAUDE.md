@@ -110,6 +110,9 @@ A living log of durable, project-specific truth. **Both Claude and the human app
 > Cross-link bigger facts to the memory system at `~/.claude/projects/.../memory/` when appropriate; this log is the fast in-repo scratch of project truth.
 
 ### Entries
+- [2026-06-26] Mobile = Expo SDK 54 (RN 0.81.5, React 19.1, expo-router 6, NativeWind 4.2, reanimated 4.1.7). Reanimated 4 uses **`react-native-worklets/plugin`** in babel (last plugin) + the `react-native-worklets` dep — NOT the old `react-native-reanimated/plugin`. — Wrong plugin = silent worklet crashes.
+- [2026-06-26] NativeWind 4 + pnpm: Metro fails with `Unable to resolve react-native-css-interop/jsx-runtime` because babel rewrites JSX to import it from app scope. Fix: add `react-native-css-interop` as an explicit app dep + `public-hoist-pattern[]=*react-native-css-interop*` in `.npmrc`. — After any SDK bump, **delete node_modules + lockfile + .expo and reinstall**, then `expo start -c`; in-place upgrades leave stale peer-locked graphs (old RN/reanimated islands).
+- [2026-06-26] Web blank screen = missing `react-dom` + `react-native-web` + `@expo/metro-runtime`. Always add all three for Expo web. pnpm hoisted layout puts deps in `apps/mobile/node_modules`, not root — don't panic if root looks empty.
 - [2026-06-26] Lime primary = `#CFE94D`, accent `#DBF16E`, backup `#C0CB24` (original logo). — Use the bright one in UI; logo-og only if exact match needed.
 - [2026-06-26] USTRY/treasury yield is available *inside* DeFindex (Etherfuse strategy), not a separate integration. CETES (MX) + TESOURO (BR) too. — One DeFindex integration covers the whole yield stack + multi-currency floor story.
 - [2026-06-26] Soroswap "Earn" = DeFindex under the hood; Soroswap AMM LP yield isn't a DeFindex strategy. — Keep Soroswap swap-only; no yield from it.

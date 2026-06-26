@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Lindi",
+    "slug": "lindi",
+    "scheme": "lindi",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF1E0"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lindi.app"
+    },
+    "android": {
+      "package": "com.lindi.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#FAF1E0"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
