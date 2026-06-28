@@ -12,6 +12,7 @@ import type {
   ActivityEvent,
   Circle,
   Decimal,
+  Message,
   Notification,
   PresetInfo,
   ProjectionResult,
@@ -19,6 +20,14 @@ import type {
   User,
 } from './models';
 import type { Preset } from './enums';
+
+/** Discover-feed filter for public pools (PRD §8.7 / D16). */
+export interface PublicPoolFilter {
+  tags?: string[]; // match any of these interest tags
+  query?: string; // free-text search over name/headline/tags
+  tierMax?: Decimal; // only pools whose minimum is <= this
+  sort?: 'size' | 'apy' | 'recent';
+}
 
 export interface PreparedTx {
   /** Opaque to the UI. Mock: a fake id. Live: prepared XDR + auth entries. */
@@ -42,8 +51,11 @@ export interface LindiDataSource {
   // ---- reads ----
   getCircle(id: number): Promise<Circle>;
   listMyCircles(userId: string): Promise<Circle[]>;
-  listPublicPools(): Promise<Circle[]>;
+  listPublicPools(filter?: PublicPoolFilter): Promise<Circle[]>;
+  listTags(): Promise<{ slug: string; label: string; count: number }[]>;
   getActivity(circleId: number): Promise<ActivityEvent[]>;
+  getMessages(circleId: number): Promise<Message[]>;
+  sendMessage(circleId: number, body: string): Promise<Message>;
   getOpenVote(circleId: number): Promise<StrategyVote | null>;
   getNotifications(userId: string): Promise<Notification[]>;
 

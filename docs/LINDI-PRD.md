@@ -636,6 +636,31 @@ The mobile app is organized as a tab bar + stacks. Each menu owns a clear job; t
 - **[PROD] Reputation surfacing** — completion-score badges on profiles/pools; gates higher-tier pools; the social-identity backbone (§21.4).
 - **[PROD] Discovery ranking & follow/invite** — ranked feed, follow organizers, invite-to-pool referral loop.
 
+### 12.9 Chat & Circle Room Feed — the social heartbeat (thin by design)
+
+Arisan is fundamentally social (§1 pivot). Each circle has a room that **fuses chat with the money activity feed**, so opening the circle to "see what people said" also surfaces "the pot grew / it's your turn." This is the weekly re-engagement hook (§3.3) made concrete. **Guardrail:** chat stays *thin* — it is not a standalone messenger or a clout feed (that is off-thesis scope-death, §21.4.1).
+
+The `Message` entity (DATA-MODEL §5) already supports four kinds. Feature breakdown:
+
+| Feature | Kind | What it does | Scope |
+|---|---|---|---|
+| **Text messages** | `text` | normal group conversation | [MVP] basic |
+| **System events** | `system` | auto-posts woven into the thread: "Maya contributed Rp500k", "pot reached Rp42jt", "round 3 paid out to Andi" — sourced from on-chain `ActivityEvent`s | [MVP] — this is what makes the room feel alive |
+| **Inline vote cards** | `vote_prompt` | a strategy proposal renders as a tappable card *inside* the thread; members vote in place; ties governance (§8.3) to the social surface | [MVP] |
+| **Milestone celebrations** | `milestone` | "🎉 70% to Umroh!", goal reached, first yield — small celebratory moments | [MVP-light] |
+| **Gentle nudges** | `system` | "Pak Andi hasn't contributed this round" surfaced kindly to the group — social pressure is the retention engine (Principle #4) | [MVP] |
+| **Reactions** | — | 👍❤️ on messages | [PROD] |
+| **Media / voice / threads** | — | photos, voice notes, threaded replies | [PROD] |
+
+**Design rules:**
+- **Chat is off-chain** (DATA-MODEL §1) — no fund custody, no money truth lives here. System messages are *projections* of on-chain events, not the source.
+- **The activity feed and chat are one surface**, not two tabs. Money events and human messages interleave by timestamp.
+- **Public pools are announcements-first**: to avoid stranger spam/abuse, a public pool's room defaults to publisher-posts + reactions; full member chat and moderation are [PROD]. Closed circles get full chat from MVP.
+- **WhatsApp ≠ in-app chat.** WhatsApp/push carry *notifications out* (`Notification` entity); the *discussion* lives in-app. Don't conflate them.
+- **Honesty + voice** apply to system copy too: no guaranteed-yield phrasing in milestones; Bahasa-first, inclusive tone (BRAND §9).
+
+> Moderation, reporting, and reactions are deferred to production. MVP ships text + system + vote_prompt + milestone in closed circles, announcements in public pools.
+
 ---
 
 ## 13. User Flows

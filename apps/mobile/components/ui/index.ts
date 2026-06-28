@@ -17,3 +17,5 @@ export { ListRow } from './ListRow';
 export { EmptyState } from './EmptyState';
 export { SectionHeader } from './SectionHeader';
 export { Stat } from './Stat';
+export { AnimatedNumber } from './AnimatedNumber';
+export { TagChip } from './TagChip';

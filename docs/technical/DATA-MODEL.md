@@ -288,10 +288,12 @@ Mirrors `SMART-CONTRACTS.md` §2. Field types are Soroban (`i128`, `u64`, `Addre
 | `id` | uuid | PK |
 | `circle_id` | uint64 | FK |
 | `author_user_id` | uuid | FK → User |
-| `kind` | enum | `text \| system \| vote_prompt \| milestone` |
+| `kind` | enum | `text \| system \| vote_prompt \| milestone` (PRD §12.9) |
 | `body` | string | |
-| `meta` | jsonb? | e.g. vote/proposal ref for `vote_prompt` |
+| `meta` | jsonb? | e.g. `{ voteId }` for `vote_prompt`; `{ activityEventId, eventType }` for `system`; `{ pct, goalLabel }` for `milestone` |
 | `created_at` | timestamptz | |
+
+> **Chat = circle room feed (PRD §12.9).** `system` messages are **projections of on-chain `ActivityEvent`s** (contributions, payouts, rebalances, milestones) interleaved with human `text` by timestamp — the feed and the chat are one surface, not two. `vote_prompt` renders an inline tappable vote card (links a `StrategyVoteMirror` via `meta.voteId`). Off-chain only (no custody). **Public pools default to announcements-first** (publisher posts + reactions); full member chat + moderation are [PROD].
 
 ### Notification
 | Field | Type | Notes |
@@ -497,6 +499,8 @@ export interface LindiDataSource {
   // Discover feed (D16): filter by interest tags / tier; sort by size/apy/recency
   listPublicPools(filter?: { tags?: string[]; tierMax?: string; sort?: 'size' | 'apy' | 'recent' }): Promise<Circle[]>;
   getActivity(circleId: number): Promise<ActivityEvent[]>;
+  getMessages(circleId: number): Promise<Message[]>;          // circle room feed (PRD §12.9)
+  sendMessage(circleId: number, body: string): Promise<Message>; // text only; system msgs are server-projected
   getNotifications(userId: string): Promise<Notification[]>;
   getReputation?(userId: string): Promise<ReputationScore>; // [PROD] optional until built
   // writes return prepared txs for client signing (ARCHITECTURE §4)

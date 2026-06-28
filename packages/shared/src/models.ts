@@ -85,6 +85,11 @@ export interface Circle {
   // settings
   autoCompound: boolean;
   isPublic: boolean;
+  // PUBLIC_POOL social-discovery fields (PRD §8.7 / D16)
+  tags?: string[]; // interest/goal tags for the Discover feed
+  tierMin?: Decimal; // minimum deposit (commitment tier); undefined = none
+  cap?: Decimal; // optional max pool size; undefined = open-ended
+  headline?: string; // PublicListing headline shown in Discover
   // vault / value (cached from chain+vault)
   vaultAddress: Address;
   potValue: Decimal; // USDC

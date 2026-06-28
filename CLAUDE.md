@@ -13,6 +13,7 @@ Every doc has one job. Read the relevant one before working in its domain.
 | Doc | Owns | Read it when |
 |---|---|---|
 | `docs/LINDI-PRD.md` | **Product bible** — vision, market, mechanics, scope, business model, demo. The *what/why*. | Any product/scope/feature decision |
+| `docs/SPRINT-PLAN.md` | **Execution plan** — 2-person parallel tracks (Dylan FE / Ifal BC), sprint goals/deliverables, mock-seam handshake, demo checkpoints. | Planning, who-does-what, sequencing |
 | `docs/BRAND.md` | Design system — color tokens, type, spacing, motion, voice, components. | Any UI / styling / copy work |
 | `docs/technical/ARCHITECTURE.md` | System layers, custody/trust boundaries, request lifecycle, env matrix. | System design, data flow, infra |
 | `docs/technical/SMART-CONTRACTS.md` | Lindi Core Soroban contract — storage, functions, vault-as-circle, governance, default/penalty, tests. | Any Rust/contract work |

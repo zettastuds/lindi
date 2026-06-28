@@ -54,6 +54,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="home" options={{ headerShown: false }} />
+        <Stack.Screen name="discover" options={{ title: 'Jelajah' }} />
         <Stack.Screen name="circle/[id]" options={{ title: '' }} />
       </Stack>
     </GestureHandlerRootView>

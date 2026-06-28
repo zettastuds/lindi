@@ -2,15 +2,22 @@
  * Mock implementation of LindiDataSource. Backs the whole app today.
  * Swap this for a live implementation later — the UI never changes.
  */
-import type { LindiDataSource, PreparedTx, ProjectionInput } from '../datasource';
-import type { ProjectionResult } from '../models';
+import type {
+  LindiDataSource,
+  PreparedTx,
+  ProjectionInput,
+  PublicPoolFilter,
+} from '../datasource';
+import type { Message, ProjectionResult } from '../models';
 import {
   activity,
   circles,
   currentUser,
+  messages,
   notifications,
   openVote,
   presets,
+  tags,
 } from './fixtures';
 
 const delay = <T>(value: T, ms = 250): Promise<T> =>
@@ -21,6 +28,33 @@ const preparedTx = (kind: string, summary: string): PreparedTx => ({
   kind,
   summary,
 });
+
+/** Filter + sort public pools for the Discover feed (PRD §8.7 / D16). */
+function filterPublicPools(filter?: PublicPoolFilter) {
+  let pools = circles.filter((c) => c.isPublic);
+  if (filter?.tags?.length) {
+    pools = pools.filter((c) => c.tags?.some((t) => filter.tags!.includes(t)));
+  }
+  if (filter?.query) {
+    const q = filter.query.toLowerCase();
+    pools = pools.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.headline?.toLowerCase().includes(q) ||
+        c.tags?.some((t) => t.includes(q)),
+    );
+  }
+  if (filter?.tierMax) {
+    pools = pools.filter((c) => Number(c.tierMin ?? 0) <= Number(filter.tierMax));
+  }
+  const sort = filter?.sort ?? 'size';
+  pools = [...pools].sort((a, b) => {
+    if (sort === 'apy') return b.apy - a.apy;
+    if (sort === 'recent') return b.createdAt.localeCompare(a.createdAt);
+    return Number(b.potValue) - Number(a.potValue); // size
+  });
+  return pools;
+}
 
 /** Plain TVM projection so the calculator works on mock numbers (YIELD-ENGINE §4). */
 function projectMock(input: ProjectionInput): ProjectionResult {
@@ -69,8 +103,23 @@ export const mockDataSource: LindiDataSource = {
   },
   listMyCircles: (userId) =>
     delay(circles.filter((c) => c.members.some((m) => m.userId === userId) || c.creatorUserId === userId)),
-  listPublicPools: () => delay(circles.filter((c) => c.isPublic)),
+  listPublicPools: (filter) => delay(filterPublicPools(filter)),
+  listTags: () => delay(tags),
   getActivity: (circleId) => delay(activity.filter((a) => a.circleId === circleId)),
+  getMessages: (circleId) => delay(messages.filter((m) => m.circleId === circleId)),
+  sendMessage: (circleId, body) => {
+    const msg: Message = {
+      id: `msg_${Math.random().toString(36).slice(2, 8)}`,
+      circleId,
+      authorUserId: currentUser.id,
+      authorUsername: currentUser.username,
+      kind: 'text',
+      body,
+      createdAt: new Date().toISOString(),
+    };
+    messages.push(msg);
+    return delay(msg);
+  },
   getOpenVote: (circleId) => delay(openVote.circleId === circleId ? openVote : null),
   getNotifications: (userId) => delay(notifications.filter((n) => n.userId === userId)),
 
