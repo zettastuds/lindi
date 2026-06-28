@@ -5,12 +5,13 @@
  */
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { Stack } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Search } from 'lucide-react-native';
 import type { Circle, PublicPoolFilter } from '@lindi/shared';
-import { data } from '../lib/datasource';
-import { Input, Screen, SegmentedControl, TagChip, Text } from '../components/ui';
-import { PoolCard } from '../components/PoolCard';
+import { color } from '@lindi/tokens';
+import { data } from '../../lib/datasource';
+import { Input, Screen, SegmentedControl, TagChip, Text } from '../../components/ui';
+import { PoolCard } from '../../components/PoolCard';
 
 type Sort = NonNullable<PublicPoolFilter['sort']>;
 
@@ -46,12 +47,10 @@ export default function Discover() {
 
   return (
     <Screen scroll>
-      <Stack.Screen options={{ title: 'Jelajah' }} />
-
       <Animated.View entering={FadeInDown.duration(420)} className="mt-1 mb-4">
         <Text variant="display">Temukan circle-mu</Text>
         <Text variant="caption" className="mt-1">
-          Gabung pool terbuka sesuai tujuanmu — uangnya tumbuh, temannya nyambung.
+          Gabung pool terbuka sesuai tujuanmu. Uangnya tumbuh, temannya nyambung.
         </Text>
       </Animated.View>
 
@@ -59,8 +58,8 @@ export default function Discover() {
         <Input
           value={query}
           onChangeText={setQuery}
-          placeholder="Cari pool (umroh, sekolah, usaha…)"
-          prefix="🔍"
+          placeholder="Cari pool (umroh, sekolah, usaha)"
+          leftIcon={<Search size={18} color={color.ink[400]} strokeWidth={2} />}
         />
       </Animated.View>
 

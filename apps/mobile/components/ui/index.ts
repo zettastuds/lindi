@@ -19,3 +19,4 @@ export { SectionHeader } from './SectionHeader';
 export { Stat } from './Stat';
 export { AnimatedNumber } from './AnimatedNumber';
 export { TagChip } from './TagChip';
+export { Logo } from './Logo';

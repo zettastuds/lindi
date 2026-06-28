@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Link } from 'expo-router';
+import { Heart, Plus, Share2 } from 'lucide-react-native';
 import { color } from '@lindi/tokens';
 import { CircleMode, fixtures, Preset, type PresetInfo } from '@lindi/shared';
 import {
@@ -23,6 +24,7 @@ import {
   Screen,
   SectionHeader,
   SegmentedControl,
+  Logo,
   Skeleton,
   Stat,
   Text,
@@ -78,11 +80,11 @@ export default function StyleGuide() {
       {/* Header */}
       <View className="flex-row items-center justify-between mt-2 mb-6">
         <View>
-          <Text variant="display">Lindi UI</Text>
-          <Text variant="caption">Design system showcase</Text>
+          <Logo variant="wordmark" height={28} />
+          <Text variant="caption" className="mt-1">Design system showcase</Text>
         </View>
-        <Link href="/home" asChild>
-          <Button label="Buka app →" variant="secondary" onPress={() => {}} />
+        <Link href="/" asChild>
+          <Button label="Buka app" variant="secondary" onPress={() => {}} />
         </Link>
       </View>
 
@@ -135,9 +137,9 @@ export default function StyleGuide() {
           <Button label="Loading" loading onPress={() => {}} />
           <Button label="Disabled" disabled onPress={() => {}} />
           <View className="flex-row gap-3">
-            <IconButton name="add" variant="lime" />
-            <IconButton name="share-outline" />
-            <IconButton name="heart-outline" variant="ghost" />
+            <IconButton icon={Plus} variant="lime" />
+            <IconButton icon={Share2} />
+            <IconButton icon={Heart} variant="ghost" />
           </View>
         </View>
       </Section>

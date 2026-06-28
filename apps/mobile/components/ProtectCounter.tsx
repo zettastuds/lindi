@@ -6,7 +6,7 @@
  */
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ShieldCheck } from 'lucide-react-native';
 import { color } from '@lindi/tokens';
 import { idr } from '../lib/format';
 import { AnimatedNumber } from './ui/AnimatedNumber';
@@ -26,7 +26,7 @@ export function ProtectCounter({ baseIdr }: { baseIdr: number }) {
   return (
     <View className="flex-row items-center gap-3 bg-info/10 rounded-md px-4 py-3">
       <View className="w-9 h-9 rounded-pill items-center justify-center" style={{ backgroundColor: color.info }}>
-        <Ionicons name="shield-checkmark" size={18} color="#FFFBF1" />
+        <ShieldCheck size={18} color={color.paper.raised} strokeWidth={2.2} />
       </View>
       <View className="flex-1">
         <Text variant="caption" className="text-info">

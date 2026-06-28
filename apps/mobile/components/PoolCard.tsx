@@ -5,7 +5,7 @@
  */
 import { Link } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { TrendingUp } from 'lucide-react-native';
 import { Preset, type Circle } from '@lindi/shared';
 import { color } from '@lindi/tokens';
 import { idr, pct, usd } from '../lib/format';
@@ -31,7 +31,7 @@ export function PoolCard({ circle }: { circle: Circle }) {
               ) : null}
             </View>
             <View className="flex-row items-center gap-1 bg-success-soft rounded-pill px-2.5 h-7">
-              <Ionicons name="trending-up" size={13} color={color.success} />
+              <TrendingUp size={13} color={color.success} strokeWidth={2.5} />
               <Text variant="caption" className="text-success font-body-strong">
                 ≈ {pct(circle.apy)}/thn
               </Text>

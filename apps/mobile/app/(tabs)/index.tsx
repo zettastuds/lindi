@@ -9,14 +9,14 @@ import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { Bell, Calculator, Compass, PlusCircle, TrendingUp, type LucideIcon } from 'lucide-react-native';
 import { CircleMode, type Circle, type Notification, type User } from '@lindi/shared';
 import { color, gradient } from '@lindi/tokens';
-import { data } from '../lib/datasource';
-import { idr } from '../lib/format';
-import { AnimatedNumber, Avatar, IconButton, Screen, SegmentedControl, Text } from '../components/ui';
-import { CircleCard } from '../components/CircleCard';
-import { ProtectCounter } from '../components/ProtectCounter';
+import { data } from '../../lib/datasource';
+import { idr } from '../../lib/format';
+import { AnimatedNumber, Avatar, IconButton, Screen, SegmentedControl, Text } from '../../components/ui';
+import { CircleCard } from '../../components/CircleCard';
+import { ProtectCounter } from '../../components/ProtectCounter';
 
 type Filter = 'ALL' | CircleMode;
 
@@ -28,12 +28,12 @@ const FILTERS: { value: Filter; label: string }[] = [
 ];
 
 function QuickAction({
-  icon,
+  icon: Icon,
   label,
   onPress,
   primary,
 }: {
-  icon: keyof typeof Ionicons.glyphMap;
+  icon: LucideIcon;
   label: string;
   onPress: () => void;
   primary?: boolean;
@@ -45,7 +45,7 @@ function QuickAction({
         primary ? 'bg-lime-500 active:bg-lime-600' : 'bg-paper-raised border border-border-hair active:bg-paper-sunken'
       }`}
     >
-      <Ionicons name={icon} size={20} color={color.ink[900]} />
+      <Icon size={20} color={color.ink[900]} strokeWidth={2} />
       <Text variant="bodyStrong" className="text-ink-900 flex-1">
         {label}
       </Text>
@@ -91,8 +91,9 @@ export default function Home() {
             <Text variant="h1">{user?.displayName ?? 'Lindi'}</Text>
           </View>
         </View>
-        <View>
-          <IconButton name="notifications-outline" />
+        <View className="flex-row items-center gap-2">
+          <IconButton icon={Calculator} onPress={() => router.push('/calculator')} />
+          <IconButton icon={Bell} />
           {unread > 0 && (
             <View className="absolute -top-1 -right-1 bg-danger rounded-pill min-w-5 h-5 px-1 items-center justify-center">
               <Text variant="caption" className="text-paper-base font-body-strong">
@@ -127,7 +128,7 @@ export default function Home() {
                 {idr(totals.idrSum)}
               </Text>
               <View className="flex-row items-center gap-1 bg-success-soft rounded-pill px-2 py-0.5">
-                <Ionicons name="trending-up" size={12} color={color.success} />
+                <TrendingUp size={12} color={color.success} strokeWidth={2.5} />
                 <Text variant="caption" className="text-success font-body-strong">
                   +{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totals.yieldSum)}
                 </Text>
@@ -145,8 +146,8 @@ export default function Home() {
 
       {/* Quick actions */}
       <Animated.View entering={FadeInDown.delay(240).duration(480)} className="flex-row gap-3 mt-4">
-        <QuickAction icon="add-circle" label="Buat Circle" primary onPress={() => router.push('/home')} />
-        <QuickAction icon="compass" label="Jelajah" onPress={() => router.push('/discover')} />
+        <QuickAction icon={PlusCircle} label="Buat Circle" primary onPress={() => router.push('/create')} />
+        <QuickAction icon={Compass} label="Jelajah" onPress={() => router.push('/discover')} />
       </Animated.View>
 
       {/* Circle list */}

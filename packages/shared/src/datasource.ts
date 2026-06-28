@@ -19,7 +19,7 @@ import type {
   StrategyVote,
   User,
 } from './models';
-import type { Preset } from './enums';
+import type { CircleMode, Preset } from './enums';
 
 /** Discover-feed filter for public pools (PRD §8.7 / D16). */
 export interface PublicPoolFilter {
@@ -42,6 +42,27 @@ export interface ProjectionInput {
   preset: Preset;
   targetAmount?: Decimal;
   targetDate?: string;
+}
+
+/** Inputs collected by the Create-Circle flow (PRD §12.2). */
+export interface CreateCircleInput {
+  mode: CircleMode;
+  name: string;
+  preset: Preset;
+  autoCompound: boolean;
+  // CLASSIC / GOAL schedule
+  contributionAmount?: Decimal;
+  roundDurationDays?: number;
+  totalRounds?: number;
+  // GOAL
+  goalLabel?: string;
+  goalAmount?: Decimal;
+  goalDate?: string;
+  // PUBLIC_POOL
+  isPublic?: boolean;
+  tierMin?: Decimal;
+  cap?: Decimal;
+  tags?: string[];
 }
 
 export interface LindiDataSource {
@@ -67,4 +88,5 @@ export interface LindiDataSource {
   buildContribute(circleId: number, round: number, amount: Decimal): Promise<PreparedTx>;
   buildVote(voteId: string, approve: boolean): Promise<PreparedTx>;
   buildJoinCircle(circleId: number, collateral: Decimal): Promise<PreparedTx>;
+  buildCreateCircle(input: CreateCircleInput): Promise<PreparedTx>;
 }

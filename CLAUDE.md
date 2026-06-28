@@ -95,6 +95,14 @@ Language is TypeScript end-to-end (mobile + backend + shared) on purpose — the
 - Bahasa Indonesia first, English toggle.
 - Commit/PR style only when asked; end commit messages with the Co-Authored-By line.
 
+### 6.1 UI / Icon / Copy Rules (inviolable)
+
+- **No emoji / emoticons anywhere in the app UI or in mock copy.** Use **Lucide** icons (`lucide-react-native`) instead. A 🎉/🙏/👍/🔍 in a screen, component, or fixture string is a bug. Icons render through Lucide components (premium, consistent stroke), driven by token colors.
+  - `IconButton` takes a Lucide component via the `icon` prop (not a string name). `EmptyState`, etc. follow the same pattern. Import the specific icon: `import { Bell } from 'lucide-react-native'`.
+  - We standardized on Lucide; do **not** add new `@expo/vector-icons`/Ionicons usages.
+- **No em-dashes ( — ) in any text shown on screen** (UI strings, mock copy, labels, headlines, chat/message bodies). Use a comma, a period, or restructure. Em-dashes in **source code comments / docs are fine** (they don't render). When in doubt: if a user could read it in the running app, no em-dash.
+- **Brand assets:** source SVGs live in `packages/assets/brand/` (turborepo source of truth); the app consumes the high-res PNG exports in `apps/mobile/assets/brand/` (`logo.png` = wordmark, `symbol.png` = orb mark) via the `Logo` component. The original `images/` SVGs are embedded-PNG, not clean vectors, so we use the extracted PNGs.
+
 ---
 
 ## 7. Self-Learning Log
@@ -118,4 +126,7 @@ A living log of durable, project-specific truth. **Both Claude and the human app
 - [2026-06-26] USTRY/treasury yield is available *inside* DeFindex (Etherfuse strategy), not a separate integration. CETES (MX) + TESOURO (BR) too. — One DeFindex integration covers the whole yield stack + multi-currency floor story.
 - [2026-06-26] Soroswap "Earn" = DeFindex under the hood; Soroswap AMM LP yield isn't a DeFindex strategy. — Keep Soroswap swap-only; no yield from it.
 - [2026-06-26] All core SDKs (stellar-sdk, smart-account-kit, defindex-sdk) are TypeScript. — Drove the RN + Node/TS monorepo decision; reuse types across stack.
+- [2026-06-29] Icons standardized on **lucide-react-native** (v1.21.0 — real package, homepage lucide.dev; needs `react-native-svg ^15`, which we added). `IconButton`/`EmptyState` take a Lucide **component** via the `icon` prop, not a string name. No `@expo/vector-icons`/Ionicons. Emoji banned in UI (see §6.1). — Premium, consistent icon set.
+- [2026-06-29] **typedRoutes DISABLED** (`app.json` experiments.typedRoutes=false) + deleted stale `.expo/types/router.d.ts`. Restructuring routes (moved Home/Discover into an `app/(tabs)/` group with a custom tab bar) kept tripping tsc on the **stale generated route types** — tsc reads `router.d.ts` but only `expo start`/`export` regenerates it, and Metro can't boot in this sandbox. Hrefs are plain strings now. Re-enable by flipping the flag + running expo once to regen types after routes stabilize. — Avoids false route-typing errors during rapid screen work.
+- [2026-06-29] Brand logos in old `images/` were **embedded-PNG-inside-SVG** (a `<pattern>` wrapping base64), not vectors. Extracted the base64 → `apps/mobile/assets/brand/{logo,symbol}.png` (500x500, transparent); SVG source moved to `packages/assets/brand/`. The `Logo` component renders the PNG. — Don't wire svg-transformer for these; they're raster. Use `<Logo variant="wordmark|symbol" />`.
 - [2026-06-29] Dev machine is WSL2 (IP `172.17.4.103`). Metro binds to that IP; QR code encodes it; phone on WiFi can't reach it → Expo Go shows "loading" forever. Web works because browser is on the same machine. Fix: `pnpm mobile:tunnel` (uses ngrok via `@expo/ngrok`). Alternative: Windows port-proxy — in PowerShell Admin: `netsh interface portproxy add v4tov4 listenport=8081 listenaddress=0.0.0.0 connectport=8081 connectaddress=172.17.4.103` + firewall rule, then `REACT_NATIVE_PACKAGER_HOSTNAME=<windows-lan-ip> expo start`.

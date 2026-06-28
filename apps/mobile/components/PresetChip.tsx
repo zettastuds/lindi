@@ -25,7 +25,7 @@ export function PresetChip({
   return (
     <Pressable onPress={onPress} className="flex-1">
       <View
-        className={`rounded-md border-[1.5px] p-4 ${
+        className={`flex-1 rounded-md border-[1.5px] p-4 ${
           selected ? 'border-lime-500 bg-lime-50' : 'border-border-hair bg-paper-raised'
         }`}
       >
@@ -34,11 +34,11 @@ export function PresetChip({
         <Text variant="caption" className="mt-1">
           {info.claim}
         </Text>
-        {info.preset !== Preset.Conservative && (
-          <Text variant="caption" className="text-ink-400 mt-1">
-            kisaran · tanpa jaminan
-          </Text>
-        )}
+        {/* spacer pushes the footnote to the bottom so all cards align */}
+        <View className="flex-1" />
+        <Text variant="caption" className="text-ink-400 mt-2">
+          {info.preset === Preset.Conservative ? 'hampir tetap' : 'kisaran · tanpa jaminan'}
+        </Text>
       </View>
     </Pressable>
   );

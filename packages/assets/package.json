@@ -1,0 +1,6 @@
+{
+  "name": "@lindi/assets",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lindi brand assets (logos, marks). Source of truth for brand imagery."
+}

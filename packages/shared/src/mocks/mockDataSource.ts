@@ -132,4 +132,6 @@ export const mockDataSource: LindiDataSource = {
     delay(preparedTx('vote', `Vote ${approve ? 'setuju' : 'tolak'} pada ${voteId}`)),
   buildJoinCircle: (circleId, collateral) =>
     delay(preparedTx('join', `Gabung circle ${circleId}, jaminan ${collateral}`)),
+  buildCreateCircle: (input) =>
+    delay(preparedTx('create_circle', `Buat circle "${input.name}" (${input.mode})`)),
 };

@@ -1,8 +1,10 @@
 /**
- * Empty state — warm, encouraging, never blank (BRAND §7). Uses the sparkle motif.
+ * Empty state, warm and encouraging, never blank (BRAND §7). Uses the sparkle motif.
+ * Pass a Lucide component via `icon` (default Sparkles).
  */
 import { View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Sparkles, type LucideIcon } from 'lucide-react-native';
+import { color } from '@lindi/tokens';
 import { Text } from './Text';
 import { Button } from './Button';
 
@@ -11,18 +13,18 @@ export function EmptyState({
   body,
   actionLabel,
   onAction,
-  icon = 'sparkles',
+  icon: Icon = Sparkles,
 }: {
   title: string;
   body?: string;
   actionLabel?: string;
   onAction?: () => void;
-  icon?: keyof typeof Ionicons.glyphMap;
+  icon?: LucideIcon;
 }) {
   return (
     <View className="items-center py-10 px-6">
       <View className="w-16 h-16 rounded-pill bg-lime-100 items-center justify-center mb-4">
-        <Ionicons name={icon} size={28} color="#69791A" />
+        <Icon size={28} color={color.lime[700]} strokeWidth={2} />
       </View>
       <Text variant="h2" className="text-center">
         {title}

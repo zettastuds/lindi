@@ -11,6 +11,7 @@ export interface InputProps extends TextInputProps {
   helper?: string;
   error?: string;
   prefix?: string;
+  leftIcon?: React.ReactNode; // e.g. a Lucide <Search /> node
   className?: string;
 }
 
@@ -19,6 +20,7 @@ export function Input({
   helper,
   error,
   prefix,
+  leftIcon,
   className = '',
   ...rest
 }: InputProps) {
@@ -39,6 +41,7 @@ export function Input({
       <View
         className={`flex-row items-center bg-paper-sunken rounded-sm border-[1.5px] px-4 h-12 ${ring}`}
       >
+        {leftIcon && <View className="mr-2">{leftIcon}</View>}
         {prefix && (
           <Text variant="body" className="text-ink-500 mr-1">
             {prefix}

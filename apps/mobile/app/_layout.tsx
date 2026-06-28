@@ -52,9 +52,10 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: '#FAF1E0' },
         }}
       >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="home" options={{ headerShown: false }} />
-        <Stack.Screen name="discover" options={{ title: 'Jelajah' }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="styleguide" options={{ headerShown: false }} />
+        <Stack.Screen name="create" options={{ title: 'Buat Circle', presentation: 'modal' }} />
+        <Stack.Screen name="calculator" options={{ title: 'Kalkulator' }} />
         <Stack.Screen name="circle/[id]" options={{ title: '' }} />
       </Stack>
     </GestureHandlerRootView>

@@ -78,7 +78,7 @@ export default function CircleRoom() {
           </Text>
           <Card>
             {circle.members.length === 0 ? (
-              <Text variant="caption">Pool publik — siapa saja bisa bergabung.</Text>
+              <Text variant="caption">Pool publik, siapa saja bisa bergabung.</Text>
             ) : (
               circle.members.map((m) => (
                 <View

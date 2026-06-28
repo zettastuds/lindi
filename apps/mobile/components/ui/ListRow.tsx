@@ -3,7 +3,8 @@
  * Used by member lists, settings, activity, etc.
  */
 import { Pressable, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ChevronRight } from 'lucide-react-native';
+import { color } from '@lindi/tokens';
 import { Text } from './Text';
 
 export function ListRow({
@@ -38,7 +39,9 @@ export function ListRow({
       </View>
       {trailing}
       {showChevron && (
-        <Ionicons name="chevron-forward" size={18} color="#8A8C7C" className="ml-1" />
+        <View className="ml-1">
+          <ChevronRight size={18} color={color.ink[400]} strokeWidth={2} />
+        </View>
       )}
     </Wrapper>
   );
