@@ -83,6 +83,8 @@ Lindi is engineered to score on all four hackathon-winning dimensions simultaneo
 
 > *"Indonesian families have lost a third of their savings' real value to the weakening rupiah over the past decade. Lindi gives them a savings circle that feels exactly like the arisan they already trust — but quietly protects their money in USD-denominated yield, so they stop bleeding purchasing power. No bank, no seed phrase, no crypto knowledge needed."*
 
+**Product framing (the wrapper):** Lindi is **"the savings circle that grows your money *and* your people."** Arisan is inherently social; Lindi makes that social fabric a first-class surface — closed circles for people you know, and **discoverable public pools** you can join by shared goal or interest — so the product compounds both *capital* (USD-protected yield) and *network* (your circle). The currency-protection thesis is the substance; the social layer is the reason people open the app and bring others. (Social-discovery scope: §8.7; next-phase social roadmap: §21.4.)
+
 ### 1.4 Strategic Pillars
 
 1. **Familiarity as the entry, substance as the depth.** Arisan gets people in the door; USD-protected long-term yield is what makes staying worthwhile.
@@ -97,7 +99,10 @@ Lindi is engineered to score on all four hackathon-winning dimensions simultaneo
 
 ### 2.1 The Macro Wound: Rupiah Depreciation
 
-The foundational insight behind Lindi is quantified and durable. Over the last ~10 years, the Indonesian rupiah has depreciated against the US dollar from roughly IDR 13,400/USD (2016) to roughly IDR 17,800/USD (mid-2026) — a **~33% loss of value, averaging ~2.9% per year, every year**, and accelerating recently (the USD/IDR pair moved ~9% in a single recent year, with Bank Indonesia hiking rates 50bps specifically to defend the currency as it hit record lows).
+The foundational insight behind Lindi is quantified, durable, and **currently accelerating**. Over the last ~10 years the Indonesian rupiah has depreciated against the US dollar from roughly IDR 13,400/USD (2016) to a **record low above IDR 18,000/USD in 2026** — a **~33% loss of value, averaging ~2.9% per year**. The trend is not abstract history: in **June 2026 the rupiah broke 18,000 for the first time ever (≈18,028/USD on 3–4 June 2026), having fallen ~7–8% in 2026 alone — the worst-performing currency in Asia** — before settling near 17,840 by late June. [^idr-record] [^idr-asia]
+
+[^idr-record]: Indonesian rupiah fell to a record low above 18,000 per US dollar in early June 2026. Sources: [Al Jazeera, 4 Jun 2026](https://www.aljazeera.com/economy/2026/6/4/indonesias-rupiah-falls-to-record-low-against-us-dollar); [Malay Mail, 4 Jun 2026](https://www.malaymail.com/amp/news/money/2026/06/04/indonesian-rupiah-falls-to-record-low-above-18000-per-us-dollar-as-investors-fret-over-economy-and-central-bank-oversight/222489). Live series: [Bank Indonesia JISDOR](https://www.bi.go.id/en/statistik/informasi-kurs/jisdor/default.aspx); [TradingEconomics USD/IDR](https://tradingeconomics.com/indonesia/currency).
+[^idr-asia]: Rupiah down ~7–8% YTD in 2026, Asia's worst-performing currency ([Al Jazeera, 4 Jun 2026](https://www.aljazeera.com/economy/2026/6/4/indonesias-rupiah-falls-to-record-low-against-us-dollar)).
 
 This creates a silent tax on every rupiah-denominated saver. When measured in **USD purchasing-power terms**, the "safe" Indonesian savings instruments look very different from their headline rates:
 
@@ -118,7 +123,10 @@ This creates a silent tax on every rupiah-denominated saver. When measured in **
 
 ### 2.2 The Cultural Substrate: Arisan at Scale
 
-Arisan is not a niche behavior — it is woven into Indonesian social and financial life. Millions of Indonesians participate in rotating savings circles, organized among neighbors, families, office colleagues, and religious communities. The ritual is trusted, habitual, and socially enforced. Crucially, the same primitive exists across virtually every emerging market under different names, representing a combined addressable population in the hundreds of millions.
+Arisan is not a niche behavior — it is woven into Indonesian social and financial life. Empirical evidence (Indonesia Family Life Survey samples) finds **~27% of Indonesian adults participate in arisan**, of whom **over 75% are women aged 26+** — a precise match for persona Bu Sri. [^arisan-part] Against ~190M adults, that implies **~50 million arisan participants in Indonesia alone**. Critically for a yield product, the research shows arisan is **not a poverty instrument — wealthier households participate *more***, and participation measurably grows household assets over time. [^arisan-impact] These are people who *have money sitting idle and losing value* — exactly Lindi's user. The ritual is trusted, habitual, and socially enforced. The same primitive exists across virtually every emerging market under different names, representing a combined addressable population in the hundreds of millions.
+
+[^arisan-part]: ~27% participation (sample ~14,000), >75% women aged >26. Sources: [Participation in ROSCAs in Indonesia (ResearchGate)](https://www.researchgate.net/publication/239809525_Participation_in_Rotating_Savings_and_Credit_Associations_in_Indonesia_New_Empirical_Evidence_on_Social_Capital); [Explaining Participation in ROSCAs — Indonesia (FindevGateway)](https://www.findevgateway.org/sites/default/files/publications/files/mfg-en-case-study-explaining-participation-in-rotating-savings-and-credit-associations-roscas-evidence-from-indonesia-2004.pdf).
+[^arisan-impact]: Wealthier households participate more; arisan participation raises household assets over time. Sources: [Impact of Joining ROSCA on Household Assets in Indonesia (Project MUSE)](https://muse.jhu.edu/article/791600/summary); [ROSCA (Arisan) Impact Study (ResearchGate)](https://www.researchgate.net/publication/364613077_ROTATING_SAVINGS_AND_CREDIT_ASSOCIATION_ARISAN_IMPACT_STUDY_ON_HOUSEHOLD-LEVEL_ANALYSIS).
 
 ### 2.3 The Regulatory Tailwind: OJK Tokenization Framework (Q3 2026)
 
@@ -341,8 +349,9 @@ The differentiating feature: members **discuss and vote** on the Circle's yield 
 What separates Lindi from a ROSCA clone is handling the case where a member who already received the pot (Classic mode) stops contributing. Defenses, in order of MVP priority:
 
 1. **Collateral staking (MVP)** — members lock a deposit on join; defaulting forfeits it to the group. Simplest, most demoable.
-2. **Risk-ordered positioning (Production)** — earlier (more default-tempting) payout positions post more collateral or accept a small fee; later positions earn a yield premium for waiting.
-3. **Reputation (Production)** — on-chain completion history gates entry to future/larger circles.
+2. **Yield-forfeiture (MVP, complement)** — a defaulting member keeps their **principal** (Lindi never seizes principal) but **forfeits accrued yield** to the group, making the group whole with minimal extra machinery. Reinforces the honesty model and is nearly free to add on top of collateral.
+3. **Risk-ordered positioning (Production)** — earlier (more default-tempting) payout positions post more collateral or accept a small fee; later positions earn a yield premium for waiting.
+4. **Reputation (Production)** — on-chain completion history gates entry to future/larger/higher-tier circles. **This doubles as Lindi's social identity** (your completion record *is* your standing in the network — see §21.4), tying default-prevention to the social-discovery layer rather than being a standalone anti-fraud bolt-on.
 
 ### 8.5 Contribution & Share Accounting (Vault-Native)
 
@@ -371,7 +380,19 @@ A circle can be **published publicly**. Unlike closed circles, a public pool:
 - Still runs on the same **per-circle DeFindex vault + group preset** engine, so deposits earn the same USD-protected yield.
 - Is ideal for community organizers, cooperatives, or influencers who want to offer an open, transparent USD-savings pool to a wide audience.
 
-> Public Pool is governance-light by default (the publisher sets the preset; optionally opens it to vote). Exact governance options for public pools are an open design item — see §22.
+**Public Pool is also Lindi's social-discovery surface (the "grow your people" layer).** A published pool carries:
+
+- **Interest / goal tags** — e.g. `Umroh 2027`, `Anak Sekolah`, `Modal Usaha`, `Ibu-Ibu RT 05`, free-form + curated. Tags drive a **Discover feed** (§12) where people find pools that match their goals and join a community with shared intent.
+- **A tier (minimum contribution)** — a pool sets a minimum deposit/recurring amount. This naturally sorts pools by commitment level. **Copy rule:** framed as "circle tier / commitment level," **never** as social class or "refined people" (BRAND §9 inclusive voice — this is a hard guardrail).
+- **An optional cap / target** — the publisher may set a maximum pool size. Deposits that would exceed the cap are **rejected atomically** at the contract level (`current + amount ≤ cap`), or the publisher sets a soft cap that stops accepting new deposits. With no cap, the pool is open-ended; one large depositor never harms others because each member owns only their own shares.
+
+**Security (load-bearing — full spec in `technical/SMART-CONTRACTS.md`):** the per-share model is safe only if the contract enforces three invariants:
+
+1. **Custody boundary:** the manager (Lindi Core / publisher) may **rebalance strategy** but can **never withdraw another member's shares** — withdrawal requires the share-owner's own smart-account signature. This is the public-pool trust question; it must be a hard on-chain invariant, not policy.
+2. **Share-inflation (first-deposit / ERC-4626-style) protection:** mandatory seeded first deposit + locked minimum ("dead") shares at vault creation so a malicious first depositor cannot skew the share price and steal later deposits.
+3. **Rounding against the depositor** so the pool cannot be drained by repeated dust deposits. Plus the global invariant `Σ member.shares == pot.vault_shares_total`.
+
+> Public Pool is governance-light by default (the publisher sets the preset; optionally opens it to vote). Exact governance options for public pools remain an open design item — see §22. Richer public-pool social features (reputation surfacing, discovery ranking, follow/invite) are **next-phase** — see §21.4.
 
 ### 8.8 Auto-Compound Toggle
 
@@ -523,8 +544,12 @@ This section makes explicit how Lindi composes the ecosystem — the "compose, d
 
 There is **no major regulated IDR stablecoin live natively on Stellar**, and Indonesian licensed exchanges do not currently operate as Stellar SEP-24/SEP-31 anchors. This is both Lindi's biggest infrastructure constraint and its biggest future opportunity. Handling, by phase:
 
-- **MVP (testnet):** Use testnet USDC + a **testnet-issued demo IDR-pegged asset** to show the full Rupiah→yield→Rupiah loop, clearly framed as a demonstration of the rail.
-- **Production:** Integrate a **licensed Indonesian VASP/payment partner** (e.g., a regulated exchange) as the fiat gateway, or a Stellar anchor once IDR coverage matures. Framed as a roadmap partnership, timed to the OJK Q3-2026 framework.
+- **MVP (testnet):** Use testnet USDC + a **testnet-issued demo IDR-pegged asset** to show the full Rupiah→yield→Rupiah loop, clearly framed as a demonstration of the rail. Concretely: Lindi issues a `IDRx-demo` testnet asset (≈ Rp1 each); "deposit Rupiah" swaps demo-IDR → testnet USDC → into the DeFindex vault; yield accrues (pre-seeded/time-advanced for the demo); "withdraw" reverses the path. The full plumbing is shown working end-to-end, honestly labeled a demo asset.
+- **Production:** The ramp path is **concrete and nameable**, not hypothetical. Indonesia has **licensed (Bappebti→OJK / PAKD) exchanges running real IDR↔crypto rails today** via bank transfer and local payment channels — **Indodax** (#1 by volume), **Tokocrypto** (Binance-owned, OJK PAKD-licensed, routes IDR through the national crypto exchange **CFX**), **Pintu**, **Reku**, plus the new integrated clearing/custody layer **ICEx** (2026, 11 major exchanges as founders). [^ramp] Production integrates one or more of these as the fiat gateway (rather than waiting for a native Stellar IDR anchor), timed to the OJK Q3-2026 framework. Unit-economics note: domestic seller transaction tax is ~0.21%.
+
+[^ramp]: Licensed Indonesian IDR on/off-ramps (Indodax, Tokocrypto, Pintu, Reku; CFX national exchange; ICEx infrastructure; ~0.21% domestic tax). Sources: [Top Crypto Exchanges in Indonesia 2026 — Liminal Custody](https://www.liminalcustody.com/blog/top-crypto-exchanges-in-indonesia-2026-regulation-and-tax-guide/); [Licensed Crypto Platforms 2026 — Fintech News Indonesia](https://fintechnews.id/110010/crypto/top-crypto-exchanges-indonesia-2026/); [Indonesia Brings Stock-Market Infrastructure to Crypto (ICEx) — PRNewswire](https://www.prnewswire.com/news-releases/indonesia-brings-stock-market-infrastructure-to-crypto-icex-group-among-builders-of-new-infrastructure-302718079.html).
+
+**P2P (peer-to-peer ramp) — considered, deferred.** A P2P matching layer (members trade IDR↔USDC directly) is attractive because it sidesteps a single licensed partner, but it has a **liquidity chicken-and-egg**: it only works once Lindi has user density. Therefore P2P is **post-MVP / production growth scope**, not a hackathon deliverable. See §21.4.
 
 ---
 
@@ -532,9 +557,26 @@ There is **no major regulated IDR stablecoin live natively on Stellar**, and Ind
 
 Features are tagged **[MVP]** (testnet hackathon build) or **[PROD]** (production scope). Detailed scope tables are in §14–§15.
 
+### 12.0 App Navigation Map (Per-Menu Breakdown)
+
+The mobile app is organized as a tab bar + stacks. Each menu owns a clear job; the **Discover** tab is the social-discovery surface added per D16.
+
+| Menu / Screen | Job | Key features | Scope |
+|---|---|---|---|
+| **Onboarding stack** | Get in, invisibly | Phone → unique username → biometric smart-account → **PIN-fallback setup**; no seed phrase, gas sponsored | MVP |
+| **Home / Beranda** | The daily hook | Total saved (USD + IDR-equiv), **purchasing-power-protected counter**, my circles, growing-pot tickers, gentle nudges | MVP |
+| **Discover / Jelajah** *(new)* | Public-pool growth surface | Browse/search open pools by **interest tag / goal / tier**, see pool size + **live APY range**, one-tap join | MVP (light) |
+| **Circle Room / [id]** | The heart | Members (by username), who's-paid, whose-turn, live pot + accrued yield, **strategy vote**, transparent ledger, light off-chain discussion, contribute | MVP |
+| **Create Circle** | Setup | Mode (Classic/Goal/Public), schedule, members, goal label+target, preset, auto-compound, collateral; for Public: **tier + tags + optional cap** | MVP |
+| **Calculator / Kalkulator** | Differentiator | Target-mode + simple-mode projection, **ranges** for variable presets, USD-vs-deposito/reksadana/ORI comparison | MVP |
+| **Strategy / Yield detail** | Transparency | Preset breakdown, live APY per DeFindex strategy, honesty bands, vote history | MVP |
+| **Activity / Riwayat** | Trust | Transparent ledger: contributions, payouts, vault deposit/withdraw, yield, default events | MVP |
+| **Profile / Akun** | Identity & security | Username, **reputation/completion score** *(PROD)*, security (biometric/PIN), language (ID/EN), notifications | MVP (rep = PROD) |
+
 ### 12.1 Onboarding & Identity
 
 - **[MVP] Biometric smart-account onboarding** — sign up with phone number + Face ID/fingerprint; smart account created invisibly (smart-account-kit + OZ `stellar-contracts`); no seed phrase. Gas sponsored (OZ Relayer).
+- **[MVP] 6-digit PIN fallback** — when biometrics are unavailable/declined, a 6-digit PIN unlocks the device-held passkey. The PIN is a **local app-lock**, never an on-chain secret or a second key. Stored as an **Argon2id hash + per-device salt in hardware-backed secure storage** (iOS Keychain / Android Keystore), **never** in the backend; rate-limited with exponential backoff and lockout after ~5 attempts (6 digits = only 1M combinations, so a bare hash is unacceptable). Full security spec in `technical/ARCHITECTURE.md`.
 - **[MVP] Unique username** — user picks a unique username; all member references (invites, circle rosters) use it, never a raw address.
 - **[MVP] Profile & circle membership** — minimal profile; create/join circles.
 - **[PROD] KYC integration** — for production fiat ramps and compliance.
@@ -583,7 +625,16 @@ Features are tagged **[MVP]** (testnet hackathon build) or **[PROD]** (productio
 ### 12.7 Fiat Ramp
 
 - **[MVP] Mock/testnet IDR gateway** — clearly-labeled demo ramp.
-- **[PROD] Licensed VASP/anchor integration** — real IDR on/off-ramp.
+- **[PROD] Licensed VASP/anchor integration** — real IDR on/off-ramp (Indodax / Tokocrypto / Pintu / Reku class partner; §11.2).
+
+### 12.8 Social Discovery (Public Pools) — the "grow your people" layer
+
+- **[MVP] Discover feed** — a browsable/searchable list of published public pools, each showing its goal, **interest tags**, **tier (minimum)**, current size, member count, and **live APY range** (honesty model applies).
+- **[MVP] Interest / goal tags** — pools are tagged (curated + free-form) so people find a community matching their intent; tags power feed filtering.
+- **[MVP] Tier (minimum contribution)** — pools sort naturally by commitment level; inclusive copy only (no class framing — BRAND §9).
+- **[MVP] Pool cap handling** — optional publisher cap; over-cap deposits rejected atomically (§8.7).
+- **[PROD] Reputation surfacing** — completion-score badges on profiles/pools; gates higher-tier pools; the social-identity backbone (§21.4).
+- **[PROD] Discovery ranking & follow/invite** — ranked feed, follow organizers, invite-to-pool referral loop.
 
 ---
 
@@ -672,6 +723,10 @@ Ship a **working, demoable, testnet** product that proves the core thesis end-to
 | Goal | Custom label + date; change-once (unanimous) | |
 | Default | Collateral-staking slash | Simplest backstop |
 | Trust | Transparent ledger + WhatsApp/push notifications | |
+| Default | Collateral-staking slash **+ yield-forfeiture** | Principal never touched |
+| Social | **Discover feed + interest tags + tier** for public pools | The "grow your people" wrapper (D16) |
+| Security | **Public-pool invariants** (custody boundary, share-inflation guard, rounding) | Judges probe public-pool safety |
+| Security | **6-digit PIN fallback** (Argon2id, hardware-backed, rate-limited) | Biometric fallback (D17) |
 | Fiat | Testnet demo IDR asset + mock ramp screen | Full loop illusion, honestly framed |
 | Assets | Stellar **testnet** USDC + testnet demo-IDR asset | Decided: testnet-first |
 
@@ -769,8 +824,8 @@ The demo is a first-class deliverable, not an afterthought. Judges reward **clar
 1. **Open local and human** — Bu Sri's arisan, a specific goal (Lebaran/Umroh), a real pain everyone feels.
 2. **Show the familiar** — Classic rotating mode. "You all know this. This is arisan. Watch what changes on Stellar." (Show the near-zero, sponsored fee.)
 3. **Reveal the magic** — Goal-Based mode + group strategy vote rebalancing a real DeFindex vault + the pot growing. "It's been earning the whole time — what a biscuit tin never could."
-4. **Land the protection** — the USD-purchasing-power comparison vs deposito/reksadana/ORI.
-5. **Zoom out once** — paluwagan/tanda/chama/susu + "and anyone can open a public pool"; one slide, one map, one big TAM number. "Built for the OJK regulation arriving this quarter — with treasury floors already live for Mexico and Brazil too."
+4. **Land the protection × social — the combined hero (D19).** Show the **purchasing-power-protected counter** ticking against the rupiah's record-low slide, *then immediately* open the **Discover feed** and join a public pool by interest — "your money is protected, and you just found your people." The two land as one beat: capital + network. Pair with the USD-purchasing-power comparison vs deposito/reksadana/ORI.
+5. **Zoom out once** — paluwagan/tanda/chama/susu + "anyone can open or discover a public pool"; one slide, one map, one big TAM number (~50M arisan participants in Indonesia alone). "Built for the OJK regulation arriving this quarter — with treasury floors already live for Mexico and Brazil too."
 
 ### 17.2 The 3-Minute Demo Script
 
@@ -780,8 +835,8 @@ The demo is a first-class deliverable, not an afterthought. Judges reward **clar
 | 0:30–1:00 | **Biometric onboarding live** — phone + fingerprint, smart account appears, no seed phrase, no XLM | "She just opened a Stellar smart wallet with her fingerprint. No seed phrase. No crypto. We sponsor the gas." |
 | 1:00–1:40 | **Classic mode**: create circle, contribute, pot forms, rotate payout | "This is arisan — exactly as she knows it. Note the fee: a fraction of a cent, sponsored." |
 | 1:40–2:30 | **Goal-Based mode** + **strategy vote rebalances the vault** + pot grows; yield calculator | "The group votes how to grow the idle pot — and that vote rebalances their own DeFindex vault. It's been earning in treasuries and Blend the whole time. On track to hit Umroh in ~11 months." |
-| 2:30–2:50 | USD-protection comparison + (demo) Rupiah loop | "In real dollar terms, this beats deposito and reksadana — because the rupiah keeps slipping. Real Rupiah in, real Rupiah out." |
-| 2:50–3:00 | Global slide (paluwagan/tanda/chama/susu) + Public Pool + OJK Q3-2026 | "Arisan in Indonesia — and anyone can open a public pool. One contract, every emerging market Stellar wants." |
+| 2:30–2:50 | **Protect-counter + Discover feed (combined hero)** + (demo) Rupiah loop | "In real dollar terms this beats deposito and reksadana — the rupiah just hit a record low. And it's social: discover an open pool by goal, join your people, your share grows protected. Real Rupiah in, real Rupiah out." |
+| 2:50–3:00 | Global slide (paluwagan/tanda/chama/susu) + Public Pool + OJK Q3-2026 | "Arisan in Indonesia — ~50 million people — and anyone can open *or discover* a public pool. One contract, every emerging market Stellar wants." |
 
 ### 17.3 Demo Production Rules
 
@@ -896,8 +951,20 @@ The demo is a first-class deliverable, not an afterthought. Judges reward **clar
 ### 21.4 Growth & Network Effects
 
 - **Invite-to-circle referral loop** — circles grow by inviting neighbors (by username); small reward for completed cycles. *Rationale:* arisan is inherently viral/social. *Effort:* Low-Med. *Suggested:* Production.
-- **Public-pool discovery feed** — a browsable list of open public pools to join. *Rationale:* turns Public Pool mode into a growth surface. *Effort:* Med. *Suggested:* Production.
+- **Public-pool discovery feed** — a browsable list of open public pools to join. *Rationale:* turns Public Pool mode into a growth surface. *Effort:* Med. *Suggested:* **MVP (light)** — promoted to MVP per D16; ranking/follow stay Production.
 - **Community/cooperative partnerships** — onboard existing arisan groups, religious communities, cooperatives wholesale. *Rationale:* fastest real-world adoption path. *Effort:* (BD, not eng). *Suggested:* Production.
+
+#### 21.4.1 Next-Phase Social Layer (post-MVP, intentionally roadmapped — D16)
+
+The MVP ships **light** social discovery (feed + tags + tier). The fuller "grow your money *and* your people" vision is a deliberate Phase-2+ surface, captured here so the PRD records the direction:
+
+- **Reputation as social identity** — on-chain completion history becomes a visible standing that gates higher-tier pools, unlocks larger circles, and powers trust between strangers. Ties default-prevention (§8.4) and social discovery into one mechanic. *Effort:* Med-High. *Phase:* 2–3.
+- **Interest-matched circles** — recommend pools by goal/interest affinity, so members "find their people," not just a yield number. *Effort:* Med. *Phase:* 2.
+- **Follow / organizer profiles / invite loops** — follow trusted organizers; ranked discovery; referral rewards on completed cycles. *Effort:* Med. *Phase:* 2.
+- **Light in-circle social** — reactions, milestone celebrations, group chat — kept *thin* and on-thesis; never a standalone social feed or clout token (that would dilute focus). *Effort:* Med. *Phase:* 2.
+- **P2P IDR↔USDC ramp** — peer matching sidesteps a single licensed partner but needs liquidity density first (chicken-and-egg). *Effort:* High (+compliance). *Phase:* 3, after user density. (§11.2.)
+
+> **Guardrail:** the social layer compounds the *core* product (USD-protected group savings). We explicitly reject generic SocialFi (social tokens, public balance feeds, engagement farming) — it is off-thesis and scope-death.
 
 ### 21.5 Differentiators Worth Considering for the Demo
 
@@ -927,6 +994,11 @@ The demo is a first-class deliverable, not an afterthought. Judges reward **clar
 | D13 | Identity | **Unique username mapped to smart-account address (no raw addresses shown)** |
 | D14 | Change goal | **Once per circle, unanimous approval** |
 | D15 | New mode | **Public Pool (published, open-join, per-member deposit/withdraw)** |
+| D16 | Social-discovery layer | **Light discovery in MVP** (public-pool Discover feed + interest tags + tier); fuller social layer + reputation-as-identity roadmapped to Phase 2+ (§21.4.1). No generic SocialFi. |
+| D17 | Biometric fallback | **6-digit PIN as local app-lock**; Argon2id hash + per-device salt in hardware-backed secure storage; rate-limited; never on backend, never an on-chain secret |
+| D18 | Default-prevention (MVP) | **Collateral staking + yield-forfeiture** (principal never seized); reputation/ordering = Production |
+| D19 | Demo hero framing | **Purchasing-power protection × social discovery, combined** — the climax pairs the protect-counter + group-vote-rebalances-vault with the "discover & join an open protected pool" beat |
+| D20 | Production IDR ramp | **Licensed PAKD/OJK exchange partner** (Indodax/Tokocrypto/Pintu/Reku class), not a native Stellar IDR anchor; P2P deferred to Phase 3 |
 
 ### 22.2 Open Questions (To Resolve Before/During Build)
 
@@ -936,7 +1008,7 @@ The demo is a first-class deliverable, not an afterthought. Judges reward **clar
 | Q2 | One strategy vs full 3-preset allocation for MVP DeFindex vault? | Eng lead | Depends on Week-3 time; fallback is single-strategy USDC vault |
 | Q3 | Which single default defense ships in demo? | Product | Recommended: collateral staking |
 | Q4 | Hero yield preset for the demo number — Conservative (safe) vs Balanced (bigger story, must show ranges)? | Product | Balanced tells a better story but must show ranges |
-| Q5 | Verify live DeFindex strategies (Blend + Etherfuse) on the target testnet | Eng | Gating technical check before committing each preset |
+| Q5 | Verify live DeFindex strategies on the target testnet — **specifically confirm a live DeFindex *Etherfuse* strategy vault**, not just Blend | Eng | Gating check. Confirmed: Etherfuse Stablebonds (USTRY/CETES/TESOURO) live on Stellar + have Blend liquidity; DeFindex live with Blend/Soroswap. The dedicated DeFindex→Etherfuse vault reads "in progress" — verify before locking Conservative=100% Etherfuse. Fallback: route Conservative via a Blend pool holding USTRY, or deposit USTRY into a DeFindex vault directly. See `technical/INTEGRATIONS.md`. |
 | Q6 | Verify Indonesian eligibility for Etherfuse assets (production) | Legal/BD | Non-US-persons restriction; production-only concern |
 | Q7 | Exact Lindi fee rate (BPS, ≤9,000) on yield | Product | Tunable; charged on yield only |
 | Q8 | Exact preset allocation percentages | Product/Eng | Illustrative defaults in §9.3; tune with live testnet rates |

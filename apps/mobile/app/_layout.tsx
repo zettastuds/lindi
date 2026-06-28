@@ -28,8 +28,14 @@ export default function RootLayout() {
     Nunito_800ExtraBold,
   });
 
+  // Safety net: hide splash after 3 s even if fonts stall (asset load failure).
   useEffect(() => {
-    if (loaded) SplashScreen.hideAsync();
+    if (loaded) {
+      SplashScreen.hideAsync();
+      return;
+    }
+    const t = setTimeout(() => SplashScreen.hideAsync(), 3000);
+    return () => clearTimeout(t);
   }, [loaded]);
 
   if (!loaded) return null;

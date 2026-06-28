@@ -80,8 +80,12 @@ pub struct Circle {
     pub goal_amount: Option<i128>, // GOAL
     pub goal_date: Option<u64>,    // GOAL
     pub goal_changed: bool,        // GOAL: change-once guard
+    pub published: bool,           // PUBLIC_POOL: discoverable in Discover feed
+    pub tier_min: i128,            // PUBLIC_POOL: minimum deposit (commitment tier); 0 = none
+    pub cap: Option<i128>,         // PUBLIC_POOL: optional max pool size (asset units)
     pub status: CircleStatus,
 }
+// Interest/goal tags for the Discover feed are off-chain (indexer/DB) keyed by circle_id — see DATA-MODEL.md. On-chain stays minimal.
 
 #[contracttype]
 pub struct Member {
@@ -120,14 +124,14 @@ pub struct StrategyVote {
 | `create_circle(creator, cfg, seed_deposit)` | creator | Deploys/links the circle's DeFindex vault, makes the **mandatory seed deposit** (PRD Q11), records Circle |
 | `join(circle_id, member, collateral)` | member | Adds member; locks collateral (CLASSIC/GOAL); PUBLIC_POOL is open-join |
 | `contribute(circle_id, member, round, amount)` | member | Pulls `amount` from member → deposits into vault → mints/records member shares; enforces all-paid-before-payout |
-| `deposit_public(circle_id, member, amount)` | member | PUBLIC_POOL: open deposit, records member shares |
+| `deposit_public(circle_id, member, amount)` | member | PUBLIC_POOL: open deposit, records member shares. **Enforces `amount >= tier_min`** and, if `cap` set, **`pot_value + amount <= cap`** (else panic — atomic reject, no partial fill) |
 | `propose_strategy(circle_id, member, preset)` | member | Opens a vote |
 | `vote_strategy(circle_id, member, approve)` | member | Casts vote; auto-resolves at quorum → triggers `rebalance` |
 | `payout(circle_id, caller)` | any member (perm-checked) | CLASSIC: rotate full pot to next recipient; advances round |
 | `complete_goal(circle_id, caller)` | any member | GOAL: final split when goal/date met |
 | `propose_early_exit(circle_id, member)` / `vote_early_exit(...)` | member | GOAL: **unanimous** early withdrawal; applies penalty |
 | `change_goal(circle_id, new_label, new_amount, new_date, approvals)` | all members | GOAL: change-once, **unanimous** |
-| `withdraw_share(circle_id, member)` | member | PUBLIC_POOL: withdraw own share anytime |
+| `withdraw_share(circle_id, member)` | member | PUBLIC_POOL: withdraw **own share only** (`recipient == member` asserted); manager can never route others' shares (§11.1) |
 | `handle_default(circle_id, member)` | any member | CLASSIC: slash collateral, make group whole |
 | `claim(circle_id, member)` | member | Claim share + accrued yield (settles from vault) |
 
@@ -204,6 +208,20 @@ handle_default(member m):
   emit Defaulted(circle, m, slash)
 ```
 Edge cases to test: defaulter who already `has_received`; defaulter in final round; collateral < shortfall; multiple defaults same round.
+
+### 6.1 Yield-forfeiture (MVP complement — D18)
+
+When collateral is insufficient or as a second backstop, a defaulter **keeps principal but forfeits accrued yield** to the group. Principal is never seized (honesty invariant).
+
+```
+on default of member m, after collateral slash:
+  principal_m = m.total_contributed
+  value_m     = m.shares * price_per_share
+  yield_m     = max(0, value_m - principal_m)
+  forfeit yield_m → redistribute as shares across non-defaulting members
+  m retains shares worth principal_m only
+```
+**Invariant:** a defaulter's settled value `>= principal_m` (we never take principal) and `<= value_m`. Unit-test alongside §6.
 
 ---
 
@@ -289,6 +307,14 @@ The mobile ledger view and `ARCHITECTURE.md` read path are built on these.
 - **Asset allowlist**: only configured deposit asset accepted.
 - **Pause switch** (prod): admin emergency pause on new deposits.
 
+### 11.1 Public-Pool Invariants (the trust question — PRD §8.7)
+
+A per-share open pool is safe **only** with these three hard, on-chain guarantees. Judges will probe them.
+
+1. **Custody boundary — withdraw-own-share-only.** `withdraw_share(circle_id, member)` settles **only `Member(circle_id, member).shares`** and `member.require_auth()` is mandatory. The manager (Lindi Core / publisher) authority is scoped to `rebalance` **only** — there is **no code path** by which a manager moves another member's shares to itself. Assert `recipient == member` in the withdraw path.
+2. **Share-inflation / first-deposit guard.** The mandatory seed deposit at vault creation (§4.1) plus **locked minimum "dead" shares** (a tiny share amount minted to a burn/zero sink and never withdrawable) prevent a malicious first depositor from skewing `price_per_share` to steal later deposits (the ERC-4626 inflation attack). Verify DeFindex's vault already seeds + locks; if not, Lindi Core seeds and burns the minimum itself.
+3. **Round against the depositor.** Share minting on deposit rounds **down** (depositor never gets more shares than value); withdrawals round shares-to-burn **up**. Blocks dust-deposit drain. Combined with the global invariant `Σ member.shares == pot.vault_shares_total + dead_shares`.
+
 > Vulnerability classes & deeper patterns: see the `stellar-dev:soroban` skill reference.
 
 ---
@@ -301,6 +327,8 @@ The mobile ledger view and `ARCHITECTURE.md` read path are built on these.
 | **Integration** (with mock vault) | contribute→deposit→withdraw round-trip; governance→rebalance; default slash |
 | **The default path** | every edge in §6 — judges probe this |
 | **The penalty path** | `penalty <= yield`, principal intact, unanimous gate |
+| **Yield-forfeiture** | defaulter settles `>= principal`, forfeited yield redistributed (§6.1) |
+| **Public-pool security** | manager cannot withdraw another's shares; first-deposit inflation blocked; dust-deposit drain blocked; `tier_min` + `cap` reject paths (§11.1) |
 | **Fork/differential** (prod) | against real DeFindex vault on testnet |
 | **Fuzz/property** | invariants in §11 hold under random op sequences |
 

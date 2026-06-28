@@ -160,6 +160,34 @@ const tx = await soroswap.buildSwap(quote, { to: recipient, slippageBps });
 
 ---
 
+## 6b. Fiat Ramp — IDR↔USDC (MVP mock · Production licensed partner)
+
+PRD §11.2 / D20. There is **no native regulated IDR anchor on Stellar**, so:
+
+### MVP (testnet) — the demo loop
+- Lindi issues a **testnet `IDRx-demo` asset** (≈ Rp1 each), clearly labeled a demo.
+- "Deposit Rupiah" → swap demo-IDR → testnet USDC → vault deposit. "Withdraw" reverses.
+- No real ramp, no KYC; the whole rail is shown working as a stage prop.
+
+### Production — licensed PAKD/OJK exchange partner (not a Stellar anchor)
+Real IDR on/off-ramp routes through a **licensed Indonesian exchange** via bank transfer / local payment channels:
+
+| Partner | Status | Notes |
+|---|---|---|
+| **Indodax** | Bappebti→OJK licensed | #1 by volume; primary IDR on-ramp |
+| **Tokocrypto** | OJK PAKD-licensed (Binance-owned) | routes IDR via national exchange **CFX**; strong bank-transfer rails |
+| **Pintu / Reku** | Bappebti→OJK | additional IDR gateways |
+| **ICEx** (2026) | OJK integrated exchange/clearing/custody | new infra layer; 11 major exchanges as founders |
+
+- Integration shape: off-platform fiat in/out at the partner; Lindi receives/sends **USDC**, never touches IDR custody (keeps Lindi out of money-transmitter scope; ARCHITECTURE §3 custody boundary holds).
+- **Tax note (unit economics):** ~0.21% domestic seller transaction tax.
+- **P2P ramp:** considered, deferred to Phase 3 (needs liquidity density first — PRD §11.2 / §21.4.1).
+- Timed to the **OJK Q3-2026** tokenization framework; legal review gates mainnet.
+
+> Sources (verify currency before relying): [Liminal Custody — Top Crypto Exchanges Indonesia 2026](https://www.liminalcustody.com/blog/top-crypto-exchanges-in-indonesia-2026-regulation-and-tax-guide/); [Fintech News Indonesia — Licensed Platforms 2026](https://fintechnews.id/110010/crypto/top-crypto-exchanges-indonesia-2026/); [PRNewswire — ICEx infrastructure](https://www.prnewswire.com/news-releases/indonesia-brings-stock-market-infrastructure-to-crypto-icex-group-among-builders-of-new-infrastructure-302718079.html).
+
+---
+
 ## 7. Integration Risk & Fallback Matrix
 
 | Integration | MVP criticality | Fallback if it fails |
@@ -170,6 +198,7 @@ const tx = await soroswap.buildSwap(quote, { to: recipient, slippageBps });
 | Soroswap | Low | stub (single-asset flow) |
 | Reflector | Low | hardcoded display rate |
 | Indexer | Medium | RPC `getEvents` direct |
+| Fiat ramp (IDR↔USDC) | **Not in MVP** | testnet demo-IDR asset; production = licensed PAKD partner (§6b) |
 
 ---
 

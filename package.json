@@ -12,7 +12,8 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "mobile": "pnpm --filter @lindi/mobile dev"
+    "mobile": "pnpm --filter @lindi/mobile dev",
+    "mobile:tunnel": "pnpm --filter @lindi/mobile tunnel"
   },
   "devDependencies": {
     "turbo": "^2.3.0",

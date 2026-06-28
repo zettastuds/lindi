@@ -46,7 +46,8 @@ display: range = [blendedAPY − band, blendedAPY + band]   // band per preset v
 ```
 - **Conservative:** narrow band (treasury). May show single near-fixed figure + "tracks US T-bill yields."
 - **Balanced / Growth:** **must** show a range/confidence band — never one number (PRD §9.4).
-- Observed early-2026 inputs (illustrative only): Etherfuse USTRY ~3.17%; Blend USDC supply ~8%+.
+- Observed early-2026 inputs (illustrative only): Etherfuse USTRY ~3.17–5% (sources vary; USTRY tracks US T-bill yields — **verify the live figure at demo time**, never hardcode); Blend USDC supply ~8%+.
+- ⚠️ **Strategy availability (PRD Q5):** Etherfuse Stablebonds (USTRY/CETES/TESOURO) are live on Stellar and have Blend liquidity, and DeFindex is live with Blend; a **dedicated DeFindex→Etherfuse strategy vault** must be confirmed live on the target network before locking Conservative = 100% Etherfuse. Fallback: route Conservative via a Blend pool holding USTRY, or deposit USTRY into a DeFindex vault directly. Detail → `INTEGRATIONS.md`.
 
 ```ts
 function blendedAPY(preset: Preset, live: Record<string, number>): number {
@@ -124,6 +125,15 @@ Parameters (`rate_max/min`, `k`, or tier breakpoints) are **config** (PRD Q10). 
 
 ### 5.3 Worked example
 Member contributed $100, vault value now $112 → yield $12. `rate(12) = 0.03 + 0.12×(50/62) ≈ 0.127`. Penalty ≈ $1.52. Payout = $112 − $1.52 = $110.48. Principal ($100) fully intact. ✅
+
+### 5.4 Default yield-forfeiture (D18) — distinct from early-exit penalty
+The early-exit penalty above is **voluntary, unanimous, dynamic**. A **default** (CLASSIC member stops contributing) is involuntary and uses a simpler rule (SMART-CONTRACTS §6.1): the defaulter **forfeits 100% of accrued yield** to the group but **keeps principal**.
+```
+defaulter_yield  = max(0, value_d − principal_d)
+defaulter_settle = principal_d                       // yield fully forfeited
+group_gain       = defaulter_yield  (redistributed as shares to non-defaulters)
+```
+Same untouchable-principal invariant (`settle ≥ principal`). Unlike the early-exit curve, the forfeiture rate is a flat 100%-of-yield because default is a broken commitment, not a negotiated exit. Both honor "never seize principal."
 
 ---
 

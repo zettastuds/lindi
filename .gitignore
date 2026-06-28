@@ -26,3 +26,5 @@ target/
 expo-env.d.ts
 
 screenshots/
+
+.claude/settings.json

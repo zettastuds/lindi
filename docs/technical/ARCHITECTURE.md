@@ -90,6 +90,25 @@
 
 > ⚠️ Production caveat: Lindi-as-vault-manager is a privileged role. The manager key must be a multisig / policy-gated account, **not** a single backend key. See `INTEGRATIONS.md` §DeFindex roles and `SMART-CONTRACTS.md` §manager-authority.
 
+### 3.1 Local Key Access & 6-Digit PIN Fallback (PRD D17)
+
+The signing key is the device passkey (secp256r1/P256) held in the **Secure Enclave (iOS) / StrongBox-backed Keystore (Android)** via smart-account-kit. It **never** leaves hardware and is **never** in app code or on the backend.
+
+- **Primary unlock:** Face ID / fingerprint → hardware releases a passkey signature for the specific auth entry.
+- **Fallback unlock:** a **6-digit PIN** when biometrics are unavailable or declined. The PIN is a **local app-lock that gates access to the hardware key — it is NOT a second private key and NOT an on-chain secret.**
+
+**PIN storage rules (hard requirements):**
+
+| Rule | Detail |
+|---|---|
+| **Hash, never plaintext** | Store `Argon2id(pin, salt)` (memory-hard). If Argon2 is unavailable in the RN runtime, fall back to scrypt or PBKDF2-HMAC-SHA256 with a high iteration count. |
+| **Per-device random salt** | 16+ bytes, generated on-device; makes a stolen hash useless off-device. |
+| **Hardware-backed storage only** | Keychain (`kSecAttrAccessibleWhenUnlockedThisDeviceOnly`, no iCloud sync) / Android Keystore + EncryptedSharedPreferences. **Never** the backend, never synced. |
+| **Brute-force defense** | 6 digits = 10⁶ combinations → offline-crackable as a bare hash. Enforce exponential backoff + hard lockout after ~5 attempts; escalate to biometric/device re-auth. Optional wipe-after-N. |
+| **Backend ignorance** | The backend never receives the PIN or its hash. A backend compromise cannot derive it (custody boundary, §3). |
+
+> The PIN unlocks local access; the *authority* to move funds still flows through OZ `__check_auth` on-chain. Losing the PIN ≠ losing funds (biometric/recovery still works); knowing the PIN on a different device ≠ access (salt + hardware binding).
+
 ---
 
 ## 4. The Canonical Request Lifecycle (gasless write)
@@ -187,7 +206,7 @@ Principle: **nothing on the critical demo path makes a live, failable third-part
 | Swap (util) | Soroswap SDK/API | low priority |
 | Oracle | Reflector | IDR display |
 | Indexer | Mercury / Zephyr; RPC fallback | events/state |
-| Mobile | React Native **or** Flutter (Q1) | Flutter has proven Soroban passkey demo |
+| Mobile | **React Native (Expo SDK 54)** — decided | Q1 resolved: monorepo scaffolded on Expo RN + NativeWind (TS-first SDK reuse across stack) |
 | Backend | Node/TS or Python/FastAPI | orchestration |
 | Notifications | WhatsApp Cloud API + push | |
 
@@ -195,7 +214,7 @@ Principle: **nothing on the critical demo path makes a live, failable third-part
 
 ## 10. Open Architecture Questions (mirror PRD §22)
 
-- **Q1** Mobile framework (RN vs Flutter).
+- ~~**Q1** Mobile framework (RN vs Flutter).~~ **Resolved: React Native (Expo SDK 54)** — scaffolded.
 - **Q2** Single-strategy vs 3-preset vault for MVP.
 - **Q5** Verify live DeFindex testnet strategies.
 - **Q11** Who funds the mandatory vault seed deposit at circle creation.

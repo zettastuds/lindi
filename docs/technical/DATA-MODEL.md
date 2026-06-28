@@ -20,6 +20,9 @@
 | Pot value / yield | derived | cache | ✅ `total_assets`, price/share |
 | Username ↔ address | — | ✅ truth | — |
 | Passkey / device | on-chain (account) | ✅ public meta only | — |
+| **PIN hash (fallback lock)** | — | **❌ never** | — · **device secure hardware only** (Keychain/Keystore); Argon2id+salt; never in DB or synced (ARCHITECTURE §3.1, D17) |
+| Interest tags / tier / cap | `tier_min`,`cap` on-chain · tags off-chain | ✅ tags truth | — |
+| Reputation **[PROD]** | derived from events | ✅ materialized view | — |
 | Goal label/amount/date | ✅ (label `Bytes`) | mirror (search) | — |
 | Vote tally | ✅ truth | mirror | — |
 | Chat / discussion | — | ✅ truth | — |
@@ -124,6 +127,9 @@ Mirrors `SMART-CONTRACTS.md` §2. Field types are Soroban (`i128`, `u64`, `Addre
 | `goal_amount` | Option<i128> | GOAL | |
 | `goal_date` | Option<u64> | GOAL | |
 | `goal_changed` | bool | GOAL | change-once guard |
+| `published` | bool | PUBLIC | discoverable in Discover feed (D16) |
+| `tier_min` | i128 | PUBLIC | minimum deposit (commitment tier); 0 = none |
+| `cap` | Option<i128> | PUBLIC | optional max pool size; over-cap deposits rejected atomically (SMART-CONTRACTS §11.1) |
 | `status` | CircleStatus | all | `Forming \| Active \| Completed \| Defaulted` |
 
 ### Member (keyed `(circle_id, address)`)
@@ -190,6 +196,8 @@ Mirrors `SMART-CONTRACTS.md` §2. Field types are Soroban (`i128`, `u64`, `Addre
 | `is_backup` | bool | recovery device |
 | `last_used_at` | timestamptz | |
 
+> **No PIN field here or anywhere in the DB.** The 6-digit PIN fallback (D17) is hashed (Argon2id + per-device salt) and stored **only in device secure hardware** (Keychain/Keystore) — never in this table, never synced, never on the backend. The backend knows a device exists (public passkey meta), not how it's locked. Spec: ARCHITECTURE §3.1.
+
 ### CircleIndex  (materialized mirror of on-chain Circle, for fast reads/search)
 | Field | Type | Notes |
 |---|---|---|
@@ -202,6 +210,9 @@ Mirrors `SMART-CONTRACTS.md` §2. Field types are Soroban (`i128`, `u64`, `Addre
 | `goal_amount` | numeric? | mirror |
 | `goal_date` | date? | mirror |
 | `is_public` | bool | PUBLIC_POOL → shown in discovery feed |
+| `tags` | text[] | denormalized from PublicListing for feed filtering (D16) |
+| `tier_min` | numeric | PUBLIC: minimum deposit (display/sort) |
+| `cap` | numeric? | PUBLIC: max pool size |
 | `vault_address` | string | FK → vault |
 | `cached_pot_value` | numeric | from vault read (USDC) |
 | `cached_pot_value_idr` | numeric | via Reflector (or hardcoded MVP) |
@@ -244,9 +255,32 @@ Mirrors `SMART-CONTRACTS.md` §2. Field types are Soroban (`i128`, `u64`, `Addre
 | `headline` | string | "Open USD savings — Conservative" |
 | `description` | string? | |
 | `cover_url` | string? | |
+| `tags` | text[] | **interest/goal tags** powering the Discover feed (D16); curated + free-form |
+| `tier_min` | numeric | mirror of on-chain `tier_min` (display/filter) |
+| `cap` | numeric? | mirror of on-chain `cap` |
 | `published_by` | uuid | FK → User |
 | `is_active` | bool | |
 | `published_at` | timestamptz | |
+
+### PoolTag  (curated tag vocabulary for Discover; optional, for autocomplete/filtering)
+| Field | Type | Notes |
+|---|---|---|
+| `slug` | string | PK — `umroh`, `anak-sekolah`, `modal-usaha`, `lebaran` |
+| `label_id` | string | Bahasa label |
+| `label_en` | string | English label |
+| `usage_count` | int | popularity for ranking |
+
+### ReputationScore  **[PROD]**  (social identity backbone — PRD §21.4.1)
+| Field | Type | Notes |
+|---|---|---|
+| `user_id` | uuid | PK/FK → User |
+| `circles_completed` | int | derived from on-chain completion history |
+| `circles_defaulted` | int | derived from `Defaulted` events |
+| `on_time_rate` | numeric | contributions on time / total |
+| `score` | numeric | composite; gates higher-tier pools |
+| `computed_at` | timestamptz | derived, recomputed from chain events |
+
+> **[PROD]** — not built for MVP. Derived **entirely** from on-chain events (completion/default/contribution), so it carries no independent custody/truth — it's a materialized social view. Doubles as the anti-default reputation gate (SMART-CONTRACTS §6) and the discovery trust signal.
 
 ### Message  (off-chain group chat / discussion room)
 | Field | Type | Notes |
@@ -428,6 +462,9 @@ export interface Circle {
   goalAmount?: string;     // decimal-as-string (avoid float money)
   goalDate?: string;       // ISO date
   isPublic: boolean;
+  tags?: string[];         // PUBLIC: interest/goal tags (Discover feed, D16)
+  tierMin?: string;        // PUBLIC: minimum deposit (decimal-as-string)
+  cap?: string;            // PUBLIC: optional max pool size
   vaultAddress: string;
   potValue: string;        // USDC
   potValueIdr: string;
@@ -457,9 +494,11 @@ export interface Membership {
 export interface LindiDataSource {
   getCircle(id: number): Promise<Circle>;
   listMyCircles(userId: string): Promise<Circle[]>;
-  listPublicPools(): Promise<Circle[]>;
+  // Discover feed (D16): filter by interest tags / tier; sort by size/apy/recency
+  listPublicPools(filter?: { tags?: string[]; tierMax?: string; sort?: 'size' | 'apy' | 'recent' }): Promise<Circle[]>;
   getActivity(circleId: number): Promise<ActivityEvent[]>;
   getNotifications(userId: string): Promise<Notification[]>;
+  getReputation?(userId: string): Promise<ReputationScore>; // [PROD] optional until built
   // writes return prepared txs for client signing (ARCHITECTURE §4)
   buildContribute(circleId: number, round: number, amount: string): Promise<PreparedTx>;
 }
